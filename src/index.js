@@ -1,6 +1,7 @@
 class Sorter {
   constructor() {
     this.arr = [];
+    this.comparator = null;
   }
 
   add(element) {
@@ -19,33 +20,42 @@ class Sorter {
     return this.arr;
   }
 
-  sort(indices) {
-    indices.sort();
-    var sortarr = [];
-    for(var i = 0; i < indices.length; i++) {
-        sortarr.push(this.arr[indices[i]]);
-    }
-    function BubbleSort(arr) {                             
+  bubbleSort(arr, comparator) {
+    if (comparator) {
+      arr.sort(comparator);
+    } else {
       var n = arr.length;
       for (var i = 0; i < n-1; i++) {
         for (var j = 0; j < n-1-i; j++) {
-           if (arr[j+1] < arr[j]) {
-              var t = arr[j+1];
-              arr[j+1] = arr[j];
-              arr[j] = t; 
-           }
+          if (arr[j+1] < arr[j]) {
+            var t = arr[j+1];
+            arr[j+1] = arr[j];
+            arr[j] = t;
           }
-       }                     
-      return arr;    
+        }
+      }
+    }
+    return arr;
   }
-  BubbleSort(sortarr);
+
+  sort(indices) {
+    indices.sort();
+    var sortedArr = [];
     for(var i = 0; i < indices.length; i++) {
-        this.arr[indices[i]] = sortarr[i];
+      sortedArr.push(this.arr[indices[i]]);
+    }
+    if (this.comparator && typeof this.comparator === 'function') {
+      this.bubbleSort(sortedArr, this.comparator)
+    } else {
+      this.bubbleSort(sortedArr);
+    }
+    for(var i = 0; i < indices.length; i++) {
+      this.arr[indices[i]] = sortedArr[i];
     }
   }
 
   setComparator(compareFunction) {
-    this.arr.sort(compareFunction);
+    this.comparator = compareFunction;
   }
 }
 
